@@ -19,6 +19,12 @@ Scripts are organised by topic.
 - Tracking
 - Utility
 
+For more about our lab's work visit: [roylelab.org](https://roylelab.org)
+
+Note that some scripts may overwrite the input data.
+Take time to read the comments and ensure you understand the purpose of the script and always use a copy of primary data as input.
+
 --
 
-For more about our lab's work visit: [roylelab.org](https://roylelab.org)
+**Disclaimer:** These scripts are shared for educational and research purposes only.
+We are not responsible for any data loss or damage that may occur through their use.
