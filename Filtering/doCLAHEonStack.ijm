@@ -1,3 +1,13 @@
+/* doCLAHEonStack.ijm
+ * 
+ * This script applies the Enhance Local Contrast (CLAHE) filter to each slice of a stack.
+ * It is designed to work with multi-dimensional stacks, applying the filter to each slice
+ * across all frames.
+ * 
+ * Usage: Open a stack and run this script.
+ */
+
+
 inputId = getImageID(); // get active image 
 inputTitle = getTitle(); 
 

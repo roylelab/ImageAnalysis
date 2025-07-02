@@ -25,11 +25,7 @@
 // script starts here
 setBatchMode(true);
 
-if (recur == true) {
-	processFolder(input);
-} else {
-	processTopFolder(input);
-}
+processFolder(input);
 
 setBatchMode(false);
 
@@ -40,8 +36,8 @@ function processFolder(input) {
 	list = getFileList(input);
 	list = Array.sort(list);
 	for (i = 0; i < list.length; i++) {
-		if(File.isDirectory(input + File.separator + list[i]))
-			processFolder(input + File.separator + list[i]);
+		if(File.isDirectory(input + list[i]) && recur == true)
+			processFolder(input + list[i]);
 		if(endsWith(list[i], suffix))
 			processFile(input, list[i]);
 	}

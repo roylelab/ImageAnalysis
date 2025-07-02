@@ -8,17 +8,13 @@
 
 #@ File (label = "Input directory", style = "directory") input
 #@ String (label = "File suffix", value = ".tif") suffix
-#@ Boolean (label = "Recursive?", value = true, persist = false) recur
+#@ Boolean (label = "Recursive?", value = false, persist = false) recur
 #@ Boolean (label = "RGB and normalise?", value = true, persist = false) rgbnorm
 
 setBatchMode(true);
 close("*");
 print("\\Clear");
-if (recur == true) {
-	processFolder(input);
-} else {
-	processTopFolder(input);
-}
+processFolder(input);
 
 // adjust brightness/contrast for each frame
 selectWindow("bigstack");
@@ -41,19 +37,8 @@ function processFolder(input) {
 	list = getFileList(input);
 	list = Array.sort(list);
 	for (i = 0; i < list.length; i++) {
-		if(File.isDirectory(input + File.separator + list[i]))
-			processFolder(input + File.separator + list[i]);
-		if(endsWith(list[i], suffix))
-			processFile(input, list[i]);
-	}
-}
-
-function processTopFolder(input) {
-	if(endsWith(input, "/")) input = substring(input, 0, (lengthOf(input)-1));
-	if(!endsWith(input, "/") || !endsWith(input,"\\")) input = input + File.separator;
-	list = getFileList(input);
-	list = Array.sort(list);
-	for (i = 0; i < list.length; i++) {
+		if(File.isDirectory(input + list[i]) && recur == true)
+			processFolder(input + list[i]);
 		if(endsWith(list[i], suffix))
 			processFile(input, list[i]);
 	}
