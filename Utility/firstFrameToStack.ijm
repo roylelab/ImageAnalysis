@@ -37,7 +37,7 @@ setBatchMode(false);
 // function to scan folders/subfolders/files to find files with correct suffix
 function processFolder(input) {
 	if(endsWith(input, "/")) input = substring(input, 0, (lengthOf(input)-1));
-	if(!endsWith(input, "/") | !endsWith(input,"\\")) input = input + File.separator;
+	if(!endsWith(input, "/") || !endsWith(input,"\\")) input = input + File.separator;
 	list = getFileList(input);
 	list = Array.sort(list);
 	for (i = 0; i < list.length; i++) {
@@ -50,7 +50,7 @@ function processFolder(input) {
 
 function processTopFolder(input) {
 	if(endsWith(input, "/")) input = substring(input, 0, (lengthOf(input)-1));
-	if(!endsWith(input, "/") | !endsWith(input,"\\")) input = input + File.separator;
+	if(!endsWith(input, "/") || !endsWith(input,"\\")) input = input + File.separator;
 	list = getFileList(input);
 	list = Array.sort(list);
 	for (i = 0; i < list.length; i++) {

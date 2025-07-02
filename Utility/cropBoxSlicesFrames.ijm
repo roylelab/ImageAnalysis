@@ -1,5 +1,8 @@
 /*
- * Make a rectangular crop and crop slices and time - and WRITE OVER original
+ * Script to make a rectangular crop and crop in space (slices) and time (frames)
+ * Options:
+ * 	recurse the directory or to stay in the top directory
+ * 	overwrite the data or not
  */
 
 #@ File (label = "Input directory", style = "directory") input
@@ -16,20 +19,40 @@
 #@ String (visibility=MESSAGE, value="Use -1 for all frames", required=false) msg4
 #@ Integer (label = "Starting frame", value = 1) tstart
 #@ Integer (label = "Ending frame", value = 30) tstop
+#@ Boolean (label = "Recursive?", value = true, persist = false) recur
+#@ Boolean (label = "Overwrite data?", value = false, persist = false) overwrite
 
 // script starts here
 setBatchMode(true);
-processFolder(input);
+
+if (recur == true) {
+	processFolder(input);
+} else {
+	processTopFolder(input);
+}
+
 setBatchMode(false);
 
 // function to scan folders/subfolders/files to find files with correct suffix
 function processFolder(input) {
-	if(!endsWith(input, File.separator)) input = input + File.separator;
+	if(endsWith(input, "/")) input = substring(input, 0, (lengthOf(input)-1));
+	if(!endsWith(input, "/") || !endsWith(input,"\\")) input = input + File.separator;
 	list = getFileList(input);
 	list = Array.sort(list);
 	for (i = 0; i < list.length; i++) {
-		if(File.isDirectory(input + list[i]))
-			processFolder(input + list[i]);
+		if(File.isDirectory(input + File.separator + list[i]))
+			processFolder(input + File.separator + list[i]);
+		if(endsWith(list[i], suffix))
+			processFile(input, list[i]);
+	}
+}
+
+function processTopFolder(input) {
+	if(endsWith(input, "/")) input = substring(input, 0, (lengthOf(input)-1));
+	if(!endsWith(input, "/") || !endsWith(input,"\\")) input = input + File.separator;
+	list = getFileList(input);
+	list = Array.sort(list);
+	for (i = 0; i < list.length; i++) {
 		if(endsWith(list[i], suffix))
 			processFile(input, list[i]);
 	}
@@ -83,7 +106,13 @@ function processFile(input, file) {
 	
 	run("Duplicate...", "title=test duplicate slices=" + zstart + "-" + zstop + " frames=" + tstart + "-" + tstop);
 	
-	save(input + file);
+	if (overwrite == true) {
+		save(input + file);
+	} else {
+		copyname = replace(file, suffix, "_crop" + suffix);
+		save(input + copyname);
+	}
+	
 	close();
 	close();
 }
