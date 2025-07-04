@@ -11,7 +11,7 @@ import fiji.plugin.trackmate.Model
 import fiji.plugin.trackmate.Settings
 import fiji.plugin.trackmate.TrackMate
 
-import fiji.plugin.trackmate.detection.DogDetectorFactory
+import fiji.plugin.trackmate.detection.LogDetectorFactory
 
 import fiji.plugin.trackmate.tracking.jaqaman.SparseLAPTrackerFactory
 
