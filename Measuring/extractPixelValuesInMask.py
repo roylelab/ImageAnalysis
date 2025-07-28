@@ -17,10 +17,7 @@ def extract_pixel_values_in_masks(directory):
             mask_filename = f"{base}_mask.tif"
             mask_path = os.path.join(directory, mask_filename)
             output_csv = os.path.join(directory, f"{base}.csv")
-            if not os.path.exists(mask_path):
-                print(f"Mask file not found for {filename}, skipping.")
-                continue
-
+            
             # Load the TIFF movie (assume shape: frames x channels x height x width or frames x height x width x channels)
             movie = tifffile.imread(movie_path)
             # Ensure movie shape is (frames, channels, height, width)
@@ -37,15 +34,20 @@ def extract_pixel_values_in_masks(directory):
                 print(f"Movie {filename} is not 4D, skipping.")
                 continue
 
-            # Load the mask (assume single channel, same height/width as movie)
-            mask = imageio.imread(mask_path)
-            if mask.ndim == 3:
-                mask = mask[..., 0]
-            mask = mask > 0  # Ensure binary
+            # Handle mask: load if exists, otherwise use all pixels
+            if not os.path.exists(mask_path):
+                print(f"Warning: Mask file not found for {filename}, using all pixels from the image.")
+                mask = np.ones((height, width), dtype=bool)  # Use all pixels
+            else:
+                # Load the mask (assume single channel, same height/width as movie)
+                mask = imageio.imread(mask_path)
+                if mask.ndim == 3:
+                    mask = mask[..., 0]
+                mask = mask > 0  # Ensure binary
 
-            if mask.shape != (height, width):
-                print(f"Mask shape does not match movie frame size for {filename}, skipping.")
-                continue
+                if mask.shape != (height, width):
+                    print(f"Mask shape does not match movie frame size for {filename}, skipping.")
+                    continue
 
             # Prepare output: list of [pixel_value, frame, channel]
             output_rows = []
