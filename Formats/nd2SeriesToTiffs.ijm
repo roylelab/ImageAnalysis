@@ -28,12 +28,18 @@ function processFolder(input) {
 
 function processFile(input, output, file) {
 	path = input + file;  
-	run("Bio-Formats Importer", "open=path open_all_series");
+	run("Bio-Formats Importer", "open=[" + path + "] open_all_series");
+	
+	// input maybe the parent directory or a subdirectory
+	// destination may not have the necessary subdirectories
+	outpath = replace(input, correctDirEnding(in), output);
+	if(!File.exists(outpath)) File.makeDirectory(outpath);
+
 	while (nImages > 0) {
 		name = getTitle();
 		// it is possible to have a / in the window name which will cause problems
 		name = replace(name, "/", "_");
-		save(output + File.separator + name + ".tif");
+		save(outpath + File.separator + name + ".tif");
 		close();
 	}
 }
